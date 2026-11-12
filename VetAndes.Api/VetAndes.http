@@ -1,0 +1,145 @@
+@host = http://localhost:5100
+
+### Propietarios: listar (200)
+GET {{host}}/api/propietarios
+
+### Propietario por id (200)
+GET {{host}}/api/propietarios/1
+
+### Propietario inexistente (404)
+GET {{host}}/api/propietarios/99
+
+### Pacientes del propietario (200)
+GET {{host}}/api/propietarios/1/pacientes
+
+### Propietario sin registro, ruta anidada (404)
+GET {{host}}/api/propietarios/99/pacientes
+
+### Crear propietario (201)
+POST {{host}}/api/propietarios
+Content-Type: application/json
+
+{
+  "documento": "70123456",
+  "nombre": "Nora Castillo",
+  "telefono": "956123478",
+  "correo": "nora.castillo@correo.com"
+}
+
+### Documento duplicado (409)
+POST {{host}}/api/propietarios
+Content-Type: application/json
+
+{
+  "documento": "45678912",
+  "nombre": "Otra persona",
+  "telefono": "900111222",
+  "correo": "otra.persona@correo.com"
+}
+
+### Correo inválido (400)
+POST {{host}}/api/propietarios
+Content-Type: application/json
+
+{
+  "documento": "70888999",
+  "nombre": "Ana Ruiz",
+  "telefono": "911222333",
+  "correo": "correo-mal-escrito"
+}
+
+### Actualizar propietario (204)
+PUT {{host}}/api/propietarios/2
+Content-Type: application/json
+
+{
+  "documento": "12345678",
+  "nombre": "Marco Quispe Rojas",
+  "telefono": "912345678",
+  "correo": "marco.quispe@correo.com"
+}
+
+### Actualizar propietario inexistente (404)
+PUT {{host}}/api/propietarios/99
+Content-Type: application/json
+
+{
+  "documento": "55555555",
+  "nombre": "Nadie",
+  "telefono": "900000000",
+  "correo": "nadie@correo.com"
+}
+
+### Eliminar propietario con pacientes (409)
+DELETE {{host}}/api/propietarios/1
+
+### Pacientes filtrados por especie (200)
+GET {{host}}/api/pacientes?especie=Perro
+
+### Filtro de especie inválido (400)
+GET {{host}}/api/pacientes?especie=Tigre
+
+### Paciente por id (200)
+GET {{host}}/api/pacientes/1
+
+### Paciente inexistente (404)
+GET {{host}}/api/pacientes/99
+
+### Crear paciente (201)
+POST {{host}}/api/pacientes
+Content-Type: application/json
+
+{
+  "nombre": "Coco",
+  "especie": "Perro",
+  "raza": "Beagle",
+  "sexo": "Macho",
+  "pesoKg": 11.4,
+  "fechaNacimiento": "2020-06-15",
+  "propietarioId": 2
+}
+
+### Nombre repetido en el mismo propietario (409)
+POST {{host}}/api/pacientes
+Content-Type: application/json
+
+{
+  "nombre": "Luna",
+  "especie": "Perro",
+  "raza": "Poodle",
+  "sexo": "Hembra",
+  "pesoKg": 6.5,
+  "fechaNacimiento": "2022-02-02",
+  "propietarioId": 1
+}
+
+### Especie inválida en el cuerpo (400)
+POST {{host}}/api/pacientes
+Content-Type: application/json
+
+{
+  "nombre": "Nube",
+  "especie": "Tigre",
+  "raza": "Bengala",
+  "sexo": "Hembra",
+  "pesoKg": 8,
+  "fechaNacimiento": "2021-01-01",
+  "propietarioId": 1
+}
+
+### Actualizar paciente (204)
+PUT {{host}}/api/pacientes/3
+Content-Type: application/json
+
+{
+  "nombre": "Kiwi",
+  "especie": "Ave",
+  "raza": "Periquito australiano",
+  "sexo": "Hembra",
+  "pesoKg": 0.09,
+  "fechaNacimiento": "2024-01-20",
+  "propietarioId": 2
+}
+
+### Eliminar paciente inexistente (404)
+DELETE {{host}}/api/pacientes/99

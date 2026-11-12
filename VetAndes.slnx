@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="VetAndes.Api/VetAndes.Api.csproj" />
+  <Project Path="VetAndes.Datos/VetAndes.Datos.csproj" />
+  <Project Path="VetAndes.Entidades/VetAndes.Entidades.csproj" />
+  <Project Path="VetAndes.Negocio/VetAndes.Negocio.csproj" />
+</Solution>
