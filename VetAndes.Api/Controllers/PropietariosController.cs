@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VetAndes.Entidades.Dtos;
 using VetAndes.Negocio;
@@ -7,6 +8,7 @@ namespace VetAndes.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PropietariosController : ControllerBase
 {
     private readonly IPropietarioService _propietarios;
@@ -20,6 +22,7 @@ public class PropietariosController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<PropietarioDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<PropietarioDto>>> Get()
     {
         var datos = await _propietarios.ListarAsync();
@@ -28,6 +31,7 @@ public class PropietariosController : ControllerBase
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(PropietarioDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PropietarioDto>> GetById(int id)
     {
@@ -40,6 +44,7 @@ public class PropietariosController : ControllerBase
 
     [HttpGet("{id:int}/pacientes")]
     [ProducesResponseType(typeof(IEnumerable<PacienteDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes(int id)
     {
@@ -50,9 +55,12 @@ public class PropietariosController : ControllerBase
         return Ok(datos);
     }
 
+    [Authorize(Roles = AuthService.RolRecepcionista)]
     [HttpPost]
     [ProducesResponseType(typeof(PropietarioDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<PropietarioDto>> Post(PropietarioCrearDto dto)
     {
@@ -67,9 +75,12 @@ public class PropietariosController : ControllerBase
         }
     }
 
+    [Authorize(Roles = AuthService.RolRecepcionista)]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Put(int id, PropietarioActualizarDto dto)
@@ -88,8 +99,11 @@ public class PropietariosController : ControllerBase
         }
     }
 
+    [Authorize(Roles = AuthService.RolVeterinario)]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Delete(int id)

@@ -41,6 +41,17 @@ CREATE TABLE Pacientes
 );
 GO
 
+CREATE TABLE Usuarios
+(
+    Id INT IDENTITY(1, 1) NOT NULL,
+    Correo NVARCHAR(120) NOT NULL,
+    ClaveHash NVARCHAR(200) NOT NULL,
+    Rol NVARCHAR(40) NOT NULL,
+    CONSTRAINT PK_Usuarios PRIMARY KEY (Id),
+    CONSTRAINT UQ_Usuarios_Correo UNIQUE (Correo)
+);
+GO
+
 INSERT INTO Propietarios (Documento, Nombre, Telefono, Correo)
 VALUES
     (N'45678912', N'Lucía Fernández', N'987654321', N'lucia.fernandez@correo.com'),
@@ -55,4 +66,11 @@ VALUES
     (N'Kiwi', N'Ave', N'Periquito', N'Hembra', 0.08, '2024-01-20', 2),
     (N'Rocky', N'Perro', N'Pastor alemán', N'Macho', 32.00, '2019-07-08', 3),
     (N'Misha', N'Gato', N'Siamés', N'Hembra', 3.60, '2023-05-19', 3);
+GO
+
+-- Clave de prueba para ambos: Clinica2026!
+INSERT INTO Usuarios (Correo, ClaveHash, Rol)
+VALUES
+    (N'recepcion@vetandes.pe', N'$2a$11$J7PXDKbIDxyncP8/XsT6gejJlFGl4URodQOxCVNEENzv5tDXVGRu.', N'Recepcionista'),
+    (N'veterinario@vetandes.pe', N'$2a$11$SMStC7wawUMV6c1q4Wkd7eBXgpbq0KkqZxxr.NiXZ4mBIhSmjlui6', N'Veterinario');
 GO

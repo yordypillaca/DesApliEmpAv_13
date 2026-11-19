@@ -14,6 +14,8 @@ public partial class VetAndesContext : DbContext
 
     public virtual DbSet<Propietario> Propietarios { get; set; }
 
+    public virtual DbSet<Usuario> Usuarios { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Paciente>(entity =>
@@ -40,6 +42,15 @@ public partial class VetAndesContext : DbContext
             entity.Property(e => e.Documento).HasMaxLength(15);
             entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.Telefono).HasMaxLength(20);
+        });
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasIndex(e => e.Correo, "UQ_Usuarios_Correo").IsUnique();
+
+            entity.Property(e => e.Correo).HasMaxLength(120);
+            entity.Property(e => e.ClaveHash).HasMaxLength(200);
+            entity.Property(e => e.Rol).HasMaxLength(40);
         });
 
         OnModelCreatingPartial(modelBuilder);

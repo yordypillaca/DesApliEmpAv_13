@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VetAndes.Entidades.Dtos;
 using VetAndes.Negocio;
@@ -7,6 +8,7 @@ namespace VetAndes.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PacientesController : ControllerBase
 {
     private static readonly string[] Especies = ["Perro", "Gato", "Ave", "Conejo"];
@@ -15,6 +17,7 @@ public class PacientesController : ControllerBase
 
     public PacientesController(IPacienteService pacientes) => _pacientes = pacientes;
 
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<PacienteDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -37,6 +40,7 @@ public class PacientesController : ControllerBase
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(PacienteDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PacienteDto>> GetById(int id)
     {
@@ -50,6 +54,7 @@ public class PacientesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(PacienteDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<PacienteDto>> Post(PacienteCrearDto dto)
     {
@@ -64,9 +69,12 @@ public class PacientesController : ControllerBase
         }
     }
 
+    [Authorize(Roles = AuthService.RolVeterinario)]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Put(int id, PacienteActualizarDto dto)
@@ -85,8 +93,11 @@ public class PacientesController : ControllerBase
         }
     }
 
+    [Authorize(Roles = AuthService.RolVeterinario)]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
